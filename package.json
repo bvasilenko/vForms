@@ -1,0 +1,53 @@
+{
+  "name": "@booga/vforms",
+  "version": "0.1.0",
+  "description": "Schema-driven form primitives. Zod schema as source of truth, react-hook-form wiring, vUi components, accessibility baked in.",
+  "license": "MIT",
+  "author": "bvasilenko",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests --ext .ts,.tsx --max-warnings 0",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@booga/vdsl": "^0.1.1",
+    "@booga/vui": "^0.1.0",
+    "@hookform/resolvers": "^3",
+    "react-hook-form": "^7",
+    "zod": "^3"
+  },
+  "peerDependencies": {
+    "react": "^18"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6",
+    "@testing-library/react": "^14",
+    "@testing-library/user-event": "^14",
+    "@types/react": "^18",
+    "@typescript-eslint/eslint-plugin": "^6",
+    "@typescript-eslint/parser": "^6",
+    "@vitest/coverage-v8": "^1",
+    "eslint": "^8",
+    "eslint-plugin-react": "^7",
+    "eslint-plugin-react-hooks": "^4",
+    "jsdom": "^24",
+    "react": "^18",
+    "react-dom": "^18",
+    "tsup": "^8",
+    "typescript": "^5",
+    "vitest": "^1"
+  }
+}
