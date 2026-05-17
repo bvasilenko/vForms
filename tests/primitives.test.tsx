@@ -3,8 +3,10 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { z } from 'zod'
 import {
+  InputField,
+  SelectField,
+  SwitchField,
   CheckboxField,
   TextareaField,
   DatePickerField,
@@ -13,7 +15,6 @@ import {
   FieldRow,
   VFormsConfigSchema,
   useVFormContext,
-  extractEnumOptions,
 } from '../src'
 
 const noop = vi.fn()
@@ -86,6 +87,99 @@ describe('Field primitives — direct usage', () => {
     )
     expect(screen.getByText('Required')).toBeInTheDocument()
   })
+
+  it('InputField renders a text input with label', () => {
+    render(
+      <form>
+        <InputField name="username" label="Username" />
+      </form>,
+    )
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByText('Username')).toBeInTheDocument()
+  })
+
+  it('InputField renders with error and aria-invalid', () => {
+    render(
+      <form>
+        <InputField name="username" error="Too short" />
+      </form>,
+    )
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Too short')).toBeInTheDocument()
+  })
+
+  it('SelectField renders a combobox with all options', () => {
+    render(
+      <form>
+        <SelectField
+          name="role"
+          label="Role"
+          options={[
+            { label: 'Admin', value: 'admin' },
+            { label: 'User', value: 'user' },
+          ]}
+        />
+      </form>,
+    )
+    expect(screen.getByRole('combobox')).toBeInTheDocument()
+    expect(screen.getByText('Role')).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'Admin' })).toBeInTheDocument()
+    expect(screen.getByRole('option', { name: 'User' })).toBeInTheDocument()
+  })
+
+  it('SelectField renders with error and aria-invalid', () => {
+    render(
+      <form>
+        <SelectField
+          name="role"
+          error="Required"
+          options={[{ label: 'Admin', value: 'admin' }]}
+        />
+      </form>,
+    )
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Required')).toBeInTheDocument()
+  })
+
+  it('SwitchField renders a switch with label', () => {
+    render(
+      <form>
+        <SwitchField name="active" label="Active" checked={false} onCheckedChange={noop} onBlur={noop} />
+      </form>,
+    )
+    expect(screen.getByRole('switch')).toBeInTheDocument()
+    expect(screen.getByText('Active')).toBeInTheDocument()
+  })
+
+  it('SwitchField renders with error and aria-invalid', () => {
+    render(
+      <form>
+        <SwitchField name="active" error="Required" checked={false} onCheckedChange={noop} onBlur={noop} />
+      </form>,
+    )
+    expect(screen.getByRole('switch')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Required')).toBeInTheDocument()
+  })
+
+  it('CheckboxField renders with error and aria-invalid', () => {
+    render(
+      <form>
+        <CheckboxField name="agreed" label="Agree" error="Required" />
+      </form>,
+    )
+    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Required')).toBeInTheDocument()
+  })
+
+  it('DatePickerField renders with error and aria-invalid', () => {
+    render(
+      <form>
+        <DatePickerField name="dob" label="DOB" error="Invalid date" />
+      </form>,
+    )
+    expect(document.getElementById('dob')).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByText('Invalid date')).toBeInTheDocument()
+  })
 })
 
 describe('Layout helpers', () => {
@@ -146,15 +240,3 @@ describe('useVFormContext', () => {
   })
 })
 
-describe('extractEnumOptions', () => {
-  it('returns an empty array for a non-enum schema', () => {
-    expect(extractEnumOptions(z.string())).toEqual([])
-  })
-
-  it('returns label/value pairs from ZodEnum values', () => {
-    expect(extractEnumOptions(z.enum(['a', 'b']))).toEqual([
-      { label: 'a', value: 'a' },
-      { label: 'b', value: 'b' },
-    ])
-  })
-})

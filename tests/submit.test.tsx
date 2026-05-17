@@ -5,7 +5,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import { z } from 'zod'
-import { Form, Field, Submit } from '../src'
+import { Form, Field, Submit, useForm } from '../src'
 
 describe('Form submit behaviour', () => {
   it('blocks submission and shows errors when validation fails', async () => {
@@ -126,5 +126,59 @@ describe('Form submit behaviour', () => {
     await user.click(screen.getByRole('button', { name: /submit/i }))
     expect(await screen.findByText('Bad email')).toBeInTheDocument()
     expect(await screen.findByText('Bad number')).toBeInTheDocument()
+  })
+
+  it('form element renders with noValidate to suppress browser-native validation', () => {
+    const schema = z.object({ name: z.string() })
+    render(
+      <Form schema={schema} onSubmit={vi.fn()}>
+        <Field name="name" />
+      </Form>,
+    )
+    expect(document.querySelector('form')).toHaveAttribute('novalidate')
+  })
+
+  it('does not auto-reset after successful submit when resetOnSuccess is false', async () => {
+    const schema = z.object({ note: z.string() })
+    const user = userEvent.setup()
+
+    render(
+      <Form schema={schema} onSubmit={vi.fn()} resetOnSuccess={false}>
+        <Field name="note" />
+        <Submit />
+      </Form>,
+    )
+
+    await user.type(screen.getByRole('textbox'), 'hello')
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+    expect(screen.getByRole('textbox')).toHaveValue('hello')
+  })
+
+  it('useForm without explicit mode defaults to onSubmit validation semantics', async () => {
+    const schema = z.object({ name: z.string().min(1, 'Required') })
+
+    function DirectForm({ onSubmit }: { onSubmit: (v: { name: string }) => void }) {
+      const { register, handleSubmit, errors } = useForm({ schema })
+      return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input {...register('name')} aria-invalid={!!errors.name} />
+          {errors.name?.message && <span role="alert">{errors.name.message}</span>}
+          <button type="submit">submit</button>
+        </form>
+      )
+    }
+
+    const onSubmit = vi.fn()
+    const user = userEvent.setup()
+    render(<DirectForm onSubmit={onSubmit} />)
+
+    const input = screen.getByRole('textbox')
+    await user.type(input, 'x')
+    await user.clear(input)
+    expect(screen.queryByRole('alert')).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: /submit/i }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('Required')
+    expect(onSubmit).not.toHaveBeenCalled()
   })
 })

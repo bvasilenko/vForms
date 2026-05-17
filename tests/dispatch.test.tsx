@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 bvasilenko
 import React from 'react'
-import { cleanup, render, screen } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import type { ZodTypeAny } from 'zod'
 import { Field, Form } from '../src'
-
-afterEach(cleanup)
 
 function renderField(fieldSchema: ZodTypeAny, multiline = false) {
   const schema = z.object({ value: fieldSchema })
@@ -94,7 +92,6 @@ describe('Transparent Zod wrapper unwrapping', () => {
   it.each(stringWrappers)('unwraps %s around z.string() → text input', (_, fieldSchema) => {
     renderField(fieldSchema)
     expect(screen.getByRole('textbox')).toBeInTheDocument()
-    cleanup()
   })
 
   it('unwraps ZodOptional around z.boolean() → switch (not text input)', () => {
@@ -119,6 +116,5 @@ describe('Transparent Zod wrapper unwrapping', () => {
     for (let i = 0; i < 11; i++) schema = schema.optional()
     renderField(schema)
     expect(screen.getByRole('textbox')).toBeInTheDocument()
-    cleanup()
   })
 })
