@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 bvasilenko
 import React, { forwardRef } from 'react'
 import { Input } from '@booga/vui'
 import type { InputProps } from '@booga/vui'

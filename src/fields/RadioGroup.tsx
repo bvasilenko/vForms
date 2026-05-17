@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 bvasilenko
 import React from 'react'
 import { RadioGroup, RadioGroupItem } from '@booga/vui'
 import { FieldWrapper, buildFieldIds, resolveDescribedBy } from './shared'

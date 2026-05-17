@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 bvasilenko
 import React, { forwardRef } from 'react'
 import { Checkbox } from '@booga/vui'
 import type { CheckboxProps } from '@booga/vui'

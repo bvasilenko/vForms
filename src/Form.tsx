@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 bvasilenko
 import React from 'react'
 import { FormProvider } from 'react-hook-form'
 import type { ZodObject, ZodRawShape, z } from 'zod'

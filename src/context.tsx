@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 bvasilenko
 import { createContext, useContext } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { ZodObject, ZodRawShape } from 'zod'
