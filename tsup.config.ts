@@ -17,6 +17,5 @@ export default defineConfig({
     '@hookform/resolvers',
     'zod',
     '@booga/vui',
-    '@booga/vdsl',
   ],
 })
