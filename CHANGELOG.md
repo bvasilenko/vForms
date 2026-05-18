@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-05-18
+
+### Added
+
+- Precompiled stylesheet at `@booga/vforms/styles.css` — zero-config adoption. A consumer with no Tailwind pipeline imports this one file and the form primitives render styled; no preset, no content globs, no Tailwind build. Covers vForms' classes and the vUi classes they render through.
+
+### Changed
+
+- `@booga/vui` dependency raised to `^0.3.0`.
+
 ## [0.2.0] - 2026-05-18
 
 ### Changed
